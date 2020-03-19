@@ -1,14 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
-const AddUserForm = props => {
+const EditUserForm = props => {
 
-    const initialState = {
-        id: null, 
-        name: "",
-        age: "",
-    };
+    const {currentUser} = props;
 
-    const [user, setUser] = useState(initialState);
+    const [user, setUser] = useState(currentUser);
 
     const handleInputChange = (event) => {
         const {name, value} = event.target;
@@ -18,9 +14,14 @@ const AddUserForm = props => {
     const handleSubmit = (event) => {
         event.preventDefault();
         if(!user.name || !user.age) return;
-        props.addUser(user);
-        setUser(initialState);
+        props.updateUser(user.id, user);
+        console.log("Updated");
     }
+
+    //This let's us watch for parent prop updates if we need to do something if the parent props change
+    useEffect(() => {
+        setUser(props.currentUser)
+    }, [props]);
 
     return (
     <form className="form-group" onSubmit={handleSubmit}>
@@ -28,9 +29,12 @@ const AddUserForm = props => {
         <input className="form-control" type="text" name="name" value={user.name} onChange={handleInputChange} />
         <label>Age</label>
         <input className="form-control" type="text" name="age" value={user.age} onChange={handleInputChange}/>
-        <button className="btn btn-success mt-2">Add new user</button>
+        <button className="btn btn-primary mt-2 mr-2"> Update User</button>
+        <button className="btn btn-secondary mt-2 mr-2" onClick={() => props.setEditing(false)}>
+        Cancel
+        </button>
     </form>
     );
 }
 
-export default AddUserForm;
+export default EditUserForm;

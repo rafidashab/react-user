@@ -9,7 +9,7 @@ function UserTable(props) {
                     <td>{user.name}</td>
                     <td>{user.age}</td>
                     <td>
-                        <button className="btn btn-primary mr-2">Edit</button>
+                        <button className="btn btn-primary mr-2" onClick={() => props.editRow(user)}>Edit</button>
                         <button className="btn btn-danger" onClick={() => props.deleteUser(user.id)}>Delete</button>
                     </td>
                 </tr>
@@ -23,7 +23,6 @@ function UserTable(props) {
             )   
         };
     }
-
 
     return (
         <table className="table"> 
