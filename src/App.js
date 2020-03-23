@@ -1,37 +1,45 @@
-import React, {useState} from 'react'; 
+import React, {useState, useEffect} from 'react'; 
 import UserTable from './tables/UserTable';
 import AddUserForm from './form/AddUserForm';
 import EditUserForm from './form/EditUserForm';
+import axios from 'axios';
+
+const url = 'http://localhost:5000'
 
 function App() {
 
-  const dummyUserData = [ 
-    { id: 1, name: 'Rafid', age:23 },
-    { id: 2, name: 'Leo', age:21 },
-    { id: 3, name: 'Mario', age:25 },
-  ]
+  const [users, setUsers] = useState([]);               //Used to keep track of all saved the users
+  const [editing, setEditing] = useState(false);        //Used to show the appropiate form 
 
-  const [users, setUsers] = useState(dummyUserData);  //Used to keep track of all saved the users
-  const [editing, setEditing] = useState(false);      //Used to show the appropiate form 
+  //only calls the first time
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await axios.get(url+'/api/users');
+      console.log('This is only called the first time');
+      setUsers(res.data);
+    }
+    fetchUser();
+  }, [])
 
   //initial state of the form
   const intialEditFormState = {
     id: null,
     name: "",
     age: "",
-  }
+  };
 
   //currentUser is passed to the edit form
   const [currentUser, setCurrentUser] = useState(intialEditFormState);
 
-  const addUser = (user) => {
-    user.id = users.length + 1;
-    setUsers([...users, user]);  //This contacinates the new user to the users list along with the old users
+  const addUser = async (user) => {
+    const newUser = await axios.post(url+'/api/user', user);
+    setUsers([...users, newUser.data]);    //This contacinates the new user to the users list along with the old users
   }
 
-  const deleteUser = (id) => {
+  const deleteUser = async (id) => {
     setEditing(false);
-    setUsers(users.filter(user => user.id !== id))
+    await axios.delete(url+'/api/user/'+id);
+    setUsers(users.filter(user => user.id !== id));
   }
 
   //Update CurrentUser based on the selected row
@@ -44,9 +52,10 @@ function App() {
     })
   }
 
-  const updateUser = (id, updatedUser) => {
+  const updateUser = async (id, updatedUser) => {
     setEditing(false);
-    setUsers(users.map(user => (user.id === id ? updatedUser : user)))
+    const {data} = await axios.put(url+'/api/user/'+id, updatedUser);  //axious returns data inside an object
+    setUsers(users.map(user => (user.id ===  updatedUser.id ? data : user)))
   }
 
   return (

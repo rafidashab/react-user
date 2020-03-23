@@ -15,7 +15,6 @@ const EditUserForm = props => {
         event.preventDefault();
         if(!user.name || !user.age) return;
         props.updateUser(user.id, user);
-        console.log("Updated");
     }
 
     //This let's us watch for parent prop updates if we need to do something if the parent props change
