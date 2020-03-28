@@ -4,7 +4,7 @@ import AddUserForm from './form/AddUserForm';
 import EditUserForm from './form/EditUserForm';
 import axios from 'axios';
 
-const url = 'http://localhost:5000'
+const url = 'http://35.202.125.218:8080'
 
 function App() {
 
