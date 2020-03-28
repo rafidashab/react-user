@@ -1,16 +1,12 @@
-# base image
-FROM node:12.2.0-alpine
+FROM node:carbon
 
-# set working directory
-WORKDIR /app
+WORKDIR /usr/src/react-app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+COPY package*.json ./
 
-# install and cache app dependencies
-COPY package.json /app/package.json
 RUN npm install
 
+COPY . .
+
 EXPOSE 3000
-# start app
-CMD ["npm", "start"]
+CMD [ "npm", "start" ]
