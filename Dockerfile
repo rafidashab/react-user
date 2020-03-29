@@ -6,7 +6,7 @@ FROM nginx:1.15.2-alpine
 COPY ./build /var/www
 
 # Copy the ngnix configrations
-COPY deployments/nginx.conf /etc/nginx/nginx.conf
+COPY ./deployments/nginx.conf /etc/nginx/nginx.conf
 
 # Expose it on port 80
 EXPOSE 3000
